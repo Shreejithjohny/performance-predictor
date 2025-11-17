@@ -1,0 +1,142 @@
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GraduationCap, ArrowLeft } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+
+const performanceData = [
+  { name: 'High Performers', value: 342, fill: 'hsl(var(--success))' },
+  { name: 'Average', value: 722, fill: 'hsl(var(--primary))' },
+  { name: 'At Risk', value: 183, fill: 'hsl(var(--accent))' },
+];
+
+const featureImportance = [
+  { feature: 'Attendance', importance: 35 },
+  { feature: 'Internal Marks', importance: 30 },
+  { feature: 'Class Participation', importance: 15 },
+  { feature: 'Engagement Index', importance: 12 },
+  { feature: 'Sports Activity', importance: 5 },
+  { feature: 'Cultural Activity', importance: 3 },
+];
+
+const Analytics = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-8 w-8 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground">EduPredict</h1>
+          </div>
+          <nav className="flex gap-4">
+            <Link to="/">
+              <Button variant="ghost">Home</Button>
+            </Link>
+            <Link to="/predict">
+              <Button variant="ghost">Predict</Button>
+            </Link>
+            <Link to="/upload">
+              <Button variant="ghost">Upload</Button>
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        <Link to="/">
+          <Button variant="ghost" className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+        </Link>
+
+        <h2 className="text-3xl font-bold mb-6 text-foreground">Analytics Dashboard</h2>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Student Distribution</CardTitle>
+              <CardDescription>Performance categorization across cohort</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={performanceData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={100}
+                    dataKey="value"
+                  >
+                    {performanceData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Feature Importance</CardTitle>
+              <CardDescription>Factors influencing predictions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={featureImportance}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="feature" angle={-45} textAnchor="end" height={100} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="importance" fill="hsl(var(--primary))" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Key Insights</CardTitle>
+              <CardDescription>Model performance and recommendations</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="text-sm text-muted-foreground">Model Accuracy</div>
+                  <div className="text-2xl font-bold text-success">94.2%</div>
+                  <div className="text-xs text-muted-foreground mt-1">Validated on test set</div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="text-sm text-muted-foreground">Early Detection Rate</div>
+                  <div className="text-2xl font-bold text-primary">87.5%</div>
+                  <div className="text-xs text-muted-foreground mt-1">At-risk students identified</div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="text-sm text-muted-foreground">Intervention Success</div>
+                  <div className="text-2xl font-bold text-secondary">76.3%</div>
+                  <div className="text-xs text-muted-foreground mt-1">Improved after support</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground">Top Recommendations</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                  <li>Focus on attendance improvement programs - highest impact factor (35%)</li>
+                  <li>Implement early warning systems for students below 75% attendance</li>
+                  <li>Strengthen class participation through interactive sessions</li>
+                  <li>Provide academic support for students scoring below 70% in internals</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Analytics;
