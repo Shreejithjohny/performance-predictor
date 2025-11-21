@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, ArrowLeft } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Header } from "@/components/Header";
+import { ROUTES } from "@/lib/constants";
 
 const performanceData = [
   { name: 'High Performers', value: 342, fill: 'hsl(var(--success))' },
@@ -22,34 +22,9 @@ const featureImportance = [
 const Analytics = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">EduPredict</h1>
-          </div>
-          <nav className="flex gap-4">
-            <Link to="/">
-              <Button variant="ghost">Home</Button>
-            </Link>
-            <Link to="/predict">
-              <Button variant="ghost">Predict</Button>
-            </Link>
-            <Link to="/upload">
-              <Button variant="ghost">Upload</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header activePath={ROUTES.ANALYTICS} />
 
       <div className="container mx-auto px-4 py-8">
-        <Link to="/">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Button>
-        </Link>
-
         <h2 className="text-3xl font-bold mb-6 text-foreground">Analytics Dashboard</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

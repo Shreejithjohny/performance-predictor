@@ -1,0 +1,32 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1f2937;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main background circle with gradient -->
+  <circle cx="16" cy="16" r="15.5" fill="url(#bgGradient)" stroke="#ffffff" stroke-width="0.5" opacity="0.95"/>
+  
+  <!-- Enhanced performance bars with gradient effect -->
+  <rect x="3.5" y="19" width="2.2" height="7" fill="url(#accentGradient)" rx="1"/>
+  <rect x="7.5" y="15" width="2.2" height="11" fill="#10b981" rx="1"/>
+  <rect x="11.5" y="10" width="2.2" height="16" fill="#10b981" rx="1" opacity="0.85"/>
+  <rect x="15.5" y="12" width="2.2" height="14" fill="#8b5cf6" rx="1"/>
+  <rect x="19.5" y="8" width="2.2" height="18" fill="#3b82f6" rx="1"/>
+  <rect x="23.5" y="13" width="2.2" height="13" fill="#f59e0b" rx="1"/>
+  
+  <!-- Smooth upward trend curve -->
+  <polyline points="4.6,22 8.6,17 12.6,10 16.6,12 20.6,8 24.6,14.5" 
+    stroke="#10b981" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+  
+  <!-- Success indicator - glowing dot -->
+  <circle cx="26" cy="6" r="1.5" fill="#10b981" opacity="0.9"/>
+  <circle cx="26" cy="6" r="2.2" fill="none" stroke="#10b981" stroke-width="0.4" opacity="0.4"/>
+</svg>

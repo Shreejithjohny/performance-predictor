@@ -1,31 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, TrendingUp, Users, AlertCircle } from "lucide-react";
+import { TrendingUp, Users, AlertCircle } from "lucide-react";
+import { Header } from "@/components/Header";
+import { ROUTES } from "@/lib/constants";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">EduPredict</h1>
-          </div>
-          <nav className="flex gap-4">
-            <Link to="/predict">
-              <Button variant="ghost">Predict</Button>
-            </Link>
-            <Link to="/upload">
-              <Button variant="ghost">Upload</Button>
-            </Link>
-            <Link to="/analytics">
-              <Button variant="ghost">Analytics</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header activePath={ROUTES.HOME} showNav={true} />
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center">
@@ -88,7 +71,7 @@ const Home = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-              <GraduationCap className="h-4 w-4 text-secondary" />
+              <TrendingUp className="h-4 w-4 text-secondary" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-secondary">85.3%</div>

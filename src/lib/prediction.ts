@@ -1,3 +1,5 @@
+import { PREDICTION_WEIGHTS, RISK_THRESHOLDS, CONFIDENCE_CONFIG } from './constants';
+
 export interface StudentData {
   attendance: number;
   internalMarks: number;
@@ -21,6 +23,12 @@ export interface PredictionResult {
   recommendations: string[];
 }
 
+/**
+ * Predict student performance based on various factors
+ * Uses weighted scoring to simulate ML prediction
+ * @param data Student engagement and performance data
+ * @returns Prediction result with confidence and recommendations
+ */
 export const predictStudent = (data: StudentData): PredictionResult => {
   // Calculate engagement index
   const engagementIndex = (
@@ -31,65 +39,60 @@ export const predictStudent = (data: StudentData): PredictionResult => {
   ) / 4;
 
   // Calculate weighted score (simulating RandomForest prediction)
-  const weights = {
-    attendance: 0.35,
-    internalMarks: 0.30,
-    classParticipation: 0.15,
-    engagement: 0.12,
-    sports: 0.05,
-    cultural: 0.03,
-  };
-
   const normalizedScore = (
-    (data.attendance / 100) * weights.attendance +
-    (data.internalMarks / 100) * weights.internalMarks +
-    (data.classParticipation / 10) * weights.classParticipation +
-    (engagementIndex / 10) * weights.engagement +
-    (data.sportsActivity / 10) * weights.sports +
-    (data.culturalActivity / 10) * weights.cultural
+    (data.attendance / 100) * PREDICTION_WEIGHTS.attendance +
+    (data.internalMarks / 100) * PREDICTION_WEIGHTS.internalMarks +
+    (data.classParticipation / 10) * PREDICTION_WEIGHTS.classParticipation +
+    (engagementIndex / 10) * PREDICTION_WEIGHTS.engagement +
+    (data.sportsActivity / 10) * PREDICTION_WEIGHTS.sports +
+    (data.culturalActivity / 10) * PREDICTION_WEIGHTS.cultural
   );
 
   // Prediction and confidence
-  const prediction: 'Pass' | 'Fail' = normalizedScore >= 0.6 ? 'Pass' : 'Fail';
+  const prediction: 'Pass' | 'Fail' = normalizedScore >= RISK_THRESHOLDS.passScore ? 'Pass' : 'Fail';
   const confidence = Math.round(
     prediction === 'Pass'
-      ? 50 + (normalizedScore - 0.6) * 125
-      : 50 + (0.6 - normalizedScore) * 125
+      ? CONFIDENCE_CONFIG.passConfidenceBase + (normalizedScore - RISK_THRESHOLDS.passScore) * CONFIDENCE_CONFIG.passConfidenceMultiplier
+      : CONFIDENCE_CONFIG.failConfidenceBase + (RISK_THRESHOLDS.passScore - normalizedScore) * CONFIDENCE_CONFIG.failConfidenceMultiplier
   );
 
   // Risk score calculation
   const riskScore = Math.round(
     (1 - normalizedScore) * 100 +
-    (data.attendance < 75 ? 20 : 0) +
-    (data.internalMarks < 50 ? 15 : 0)
+    (data.attendance < RISK_THRESHOLDS.lowAttendance ? RISK_THRESHOLDS.attendancePenalty : 0) +
+    (data.internalMarks < RISK_THRESHOLDS.lowMarks ? RISK_THRESHOLDS.marksPenalty : 0)
   );
 
   // Risk level
   const riskLevel: 'Low' | 'Medium' | 'High' =
-    riskScore < 30 ? 'Low' : riskScore < 60 ? 'Medium' : 'High';
+    riskScore < RISK_THRESHOLDS.lowRiskMaxScore 
+      ? 'Low' 
+      : riskScore < RISK_THRESHOLDS.mediumRiskMaxScore 
+      ? 'Medium' 
+      : 'High';
 
   // Feature importance
   const featureImportance = [
-    { feature: 'Attendance', value: data.attendance, importance: weights.attendance * 100 },
-    { feature: 'Internal Marks', value: data.internalMarks, importance: weights.internalMarks * 100 },
-    { feature: 'Class Participation', value: data.classParticipation, importance: weights.classParticipation * 100 },
-    { feature: 'Engagement Index', value: engagementIndex, importance: weights.engagement * 100 },
-    { feature: 'Sports Activity', value: data.sportsActivity, importance: weights.sports * 100 },
-    { feature: 'Cultural Activity', value: data.culturalActivity, importance: weights.cultural * 100 },
+    { feature: 'Attendance', value: data.attendance, importance: PREDICTION_WEIGHTS.attendance * 100 },
+    { feature: 'Internal Marks', value: data.internalMarks, importance: PREDICTION_WEIGHTS.internalMarks * 100 },
+    { feature: 'Class Participation', value: data.classParticipation, importance: PREDICTION_WEIGHTS.classParticipation * 100 },
+    { feature: 'Engagement Index', value: engagementIndex, importance: PREDICTION_WEIGHTS.engagement * 100 },
+    { feature: 'Sports Activity', value: data.sportsActivity, importance: PREDICTION_WEIGHTS.sports * 100 },
+    { feature: 'Cultural Activity', value: data.culturalActivity, importance: PREDICTION_WEIGHTS.cultural * 100 },
   ].sort((a, b) => b.importance - a.importance);
 
   // Recommendations
   const recommendations: string[] = [];
-  if (data.attendance < 75) {
+  if (data.attendance < RISK_THRESHOLDS.lowAttendance) {
     recommendations.push('Critical: Improve attendance - current rate is below threshold');
   }
   if (data.internalMarks < 60) {
     recommendations.push('Provide academic support and tutoring for core subjects');
   }
-  if (data.classParticipation < 5) {
+  if (data.classParticipation < RISK_THRESHOLDS.lowParticipation) {
     recommendations.push('Encourage active class participation through interactive sessions');
   }
-  if (engagementIndex < 5) {
+  if (engagementIndex < RISK_THRESHOLDS.lowEngagement) {
     recommendations.push('Increase engagement through extracurricular activities');
   }
   if (prediction === 'Pass' && riskLevel === 'Low') {
@@ -101,7 +104,7 @@ export const predictStudent = (data: StudentData): PredictionResult => {
 
   return {
     prediction,
-    confidence,
+    confidence: Math.min(Math.max(confidence, 0), 100), // Clamp between 0-100
     riskLevel,
     engagementIndex: Math.round(engagementIndex * 10) / 10,
     riskScore,

@@ -1,56 +1,17 @@
-# Welcome to your Lovable project
+﻿# PerformancePredictor
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/5c4ede68-20b5-4ef9-9670-9c9cb8e15f75
+**PerformancePredictor** is a student performance prediction system that leverages machine learning to predict student outcomes and identify at-risk students early. Built with React, TypeScript, and Vite, it provides educators with actionable insights to support student success.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Single Student Prediction** - Input individual student data for instant prediction with detailed insights
+- **Bulk CSV Upload** - Process entire cohorts at once with batch predictions and downloadable results
+- **Analytics Dashboard** - Visualize cohort insights with interactive charts and performance metrics
+- **Risk Assessment** - Identify at-risk students and receive targeted intervention recommendations
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/5c4ede68-20b5-4ef9-9670-9c9cb8e15f75) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technology Stack
 
 This project is built with:
 
@@ -60,14 +21,65 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/5c4ede68-20b5-4ef9-9670-9c9cb8e15f75) and click on Share -> Publish.
+### Prerequisites
 
-## Can I connect a custom domain to my Lovable project?
+- Node.js & npm installed
 
-Yes, you can!
+### Installation
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+`sh
+# Step 1: Navigate to the project directory.
+cd edu-insight-ai
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+# Step 2: Install the necessary dependencies.
+npm install
+
+# Step 3: Start the development server with auto-reloading and an instant preview.
+npm run dev
+`
+
+The development server will start on http://localhost:8080
+
+## Available Scripts
+
+- 
+pm run dev - Start development server
+- 
+pm run build - Build for production
+- 
+pm run build:dev - Build for development with source maps
+- 
+pm run lint - Run ESLint
+- 
+pm run preview - Preview production build
+
+## Project Structure
+
+`
+src/
+ pages/              # Main page components
+ components/         # Reusable React components
+ lib/                # Utility functions and prediction logic
+ integrations/       # External service integrations (Supabase)
+ hooks/              # Custom React hooks
+`
+
+## Deployment
+
+Build and deploy to your preferred hosting platform:
+
+`sh
+npm run build
+`
+
+The build output will be in the dist directory.
+
+## Contributing
+
+Feel free to fork, modify, and improve this project for your use case.
+
+## License
+
+This project is open source and available under the MIT License.

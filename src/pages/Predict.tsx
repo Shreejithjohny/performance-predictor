@@ -1,174 +1,271 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GraduationCap, ArrowLeft } from "lucide-react";
-import { predictStudent } from "@/lib/prediction";
-import PredictionResult from "@/components/PredictionResult";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { Header } from "@/components/Header";
+import { predictStudent, StudentData, PredictionResult } from "@/lib/prediction";
+import PredictionResultDisplay from "@/components/PredictionResult";
+import { studentDataSchema } from "@/lib/validation";
+import { ROUTES } from "@/lib/constants";
 
 const Predict = () => {
-  const [formData, setFormData] = useState({
-    attendance: "",
-    internalMarks: "",
-    culturalActivity: "",
-    classParticipation: "",
-    sportsActivity: "",
-    curricularActivity: "",
-  });
-  
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<PredictionResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [generalError, setGeneralError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const prediction = predictStudent({
-      attendance: parseFloat(formData.attendance),
-      internalMarks: parseFloat(formData.internalMarks),
-      culturalActivity: parseFloat(formData.culturalActivity),
-      classParticipation: parseFloat(formData.classParticipation),
-      sportsActivity: parseFloat(formData.sportsActivity),
-      curricularActivity: parseFloat(formData.curricularActivity),
-    });
-    setResult(prediction);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm<StudentData>({
+    resolver: zodResolver(studentDataSchema),
+    mode: "onBlur",
+    defaultValues: {
+      attendance: 0,
+      internalMarks: 0,
+      culturalActivity: 0,
+      classParticipation: 0,
+      sportsActivity: 0,
+      curricularActivity: 0,
+    },
+  });
+
+  const onSubmit = async (data: StudentData) => {
+    try {
+      setIsLoading(true);
+      setGeneralError("");
+
+      // Note: validation already happened via zodResolver in useForm
+      // Simulate processing delay for better UX
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const prediction = predictStudent(data);
+      setResult(prediction);
+    } catch (err) {
+      setGeneralError(
+        err instanceof Error ? err.message : "An error occurred while making the prediction"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleReset = () => {
+    reset();
+    setResult(null);
+    setGeneralError("");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">EduPredict</h1>
-          </div>
-          <nav className="flex gap-4">
-            <Link to="/">
-              <Button variant="ghost">Home</Button>
-            </Link>
-            <Link to="/upload">
-              <Button variant="ghost">Upload</Button>
-            </Link>
-            <Link to="/analytics">
-              <Button variant="ghost">Analytics</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header activePath={ROUTES.PREDICT} />
 
       <div className="container mx-auto px-4 py-8">
-        <Link to="/">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Button>
-        </Link>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
             <CardHeader>
               <CardTitle>Student Data Input</CardTitle>
-              <CardDescription>
-                Enter student information to predict academic performance
-              </CardDescription>
+              <CardDescription>Enter student information to predict academic performance</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {generalError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{generalError}</AlertDescription>
+                </Alert>
+              )}
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {/* Attendance */}
                 <div className="space-y-2">
                   <Label htmlFor="attendance">Attendance Percentage (0-100)</Label>
-                  <Input
-                    id="attendance"
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    required
-                    value={formData.attendance}
-                    onChange={(e) => handleChange("attendance", e.target.value)}
+                  <Controller
+                    name="attendance"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="attendance"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.attendance ? "border-red-500" : ""}
+                      />
+                    )}
                   />
+                  {errors.attendance && (
+                    <p className="text-sm text-red-500">{errors.attendance.message}</p>
+                  )}
                 </div>
 
+                {/* Internal Marks */}
                 <div className="space-y-2">
                   <Label htmlFor="internalMarks">Internal Marks Average (0-100)</Label>
-                  <Input
-                    id="internalMarks"
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    required
-                    value={formData.internalMarks}
-                    onChange={(e) => handleChange("internalMarks", e.target.value)}
+                  <Controller
+                    name="internalMarks"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="internalMarks"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.internalMarks ? "border-red-500" : ""}
+                      />
+                    )}
                   />
+                  {errors.internalMarks && (
+                    <p className="text-sm text-red-500">{errors.internalMarks.message}</p>
+                  )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="culturalActivity">Cultural Activity Score (0-10)</Label>
-                  <Input
-                    id="culturalActivity"
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    required
-                    value={formData.culturalActivity}
-                    onChange={(e) => handleChange("culturalActivity", e.target.value)}
-                  />
-                </div>
-
+                {/* Class Participation */}
                 <div className="space-y-2">
                   <Label htmlFor="classParticipation">Class Participation Score (0-10)</Label>
-                  <Input
-                    id="classParticipation"
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    required
-                    value={formData.classParticipation}
-                    onChange={(e) => handleChange("classParticipation", e.target.value)}
+                  <Controller
+                    name="classParticipation"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="classParticipation"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.classParticipation ? "border-red-500" : ""}
+                      />
+                    )}
                   />
+                  {errors.classParticipation && (
+                    <p className="text-sm text-red-500">{errors.classParticipation.message}</p>
+                  )}
                 </div>
 
+                {/* Cultural Activity */}
+                <div className="space-y-2">
+                  <Label htmlFor="culturalActivity">Cultural Activity Score (0-10)</Label>
+                  <Controller
+                    name="culturalActivity"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="culturalActivity"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.culturalActivity ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.culturalActivity && (
+                    <p className="text-sm text-red-500">{errors.culturalActivity.message}</p>
+                  )}
+                </div>
+
+                {/* Sports Activity */}
                 <div className="space-y-2">
                   <Label htmlFor="sportsActivity">Sports Activity Score (0-10)</Label>
-                  <Input
-                    id="sportsActivity"
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    required
-                    value={formData.sportsActivity}
-                    onChange={(e) => handleChange("sportsActivity", e.target.value)}
+                  <Controller
+                    name="sportsActivity"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="sportsActivity"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.sportsActivity ? "border-red-500" : ""}
+                      />
+                    )}
                   />
+                  {errors.sportsActivity && (
+                    <p className="text-sm text-red-500">{errors.sportsActivity.message}</p>
+                  )}
                 </div>
 
+                {/* Curricular Activity */}
                 <div className="space-y-2">
                   <Label htmlFor="curricularActivity">Curricular Activity Score (0-10)</Label>
-                  <Input
-                    id="curricularActivity"
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    required
-                    value={formData.curricularActivity}
-                    onChange={(e) => handleChange("curricularActivity", e.target.value)}
+                  <Controller
+                    name="curricularActivity"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="curricularActivity"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        className={errors.curricularActivity ? "border-red-500" : ""}
+                      />
+                    )}
                   />
+                  {errors.curricularActivity && (
+                    <p className="text-sm text-red-500">{errors.curricularActivity.message}</p>
+                  )}
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Predict Performance
-                </Button>
+                <div className="flex gap-2 pt-4">
+                  <Button type="submit" className="flex-1" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Predicting...
+                      </>
+                    ) : (
+                      "Predict Performance"
+                    )}
+                  </Button>
+                  {result && (
+                    <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+                      Clear
+                    </Button>
+                  )}
+                </div>
               </form>
             </CardContent>
           </Card>
 
-          {result && <PredictionResult result={result} />}
+          {result && (
+            <div className="space-y-4">
+              <Alert className="border-green-200 bg-green-50">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <AlertTitle className="text-green-800">Prediction Complete</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  The analysis has been completed successfully.
+                </AlertDescription>
+              </Alert>
+              <PredictionResultDisplay result={result} />
+            </div>
+          )}
         </div>
       </div>
     </div>
