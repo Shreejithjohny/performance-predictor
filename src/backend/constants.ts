@@ -69,6 +69,7 @@ export const ROUTES = {
   PREDICT: '/predict',
   UPLOAD: '/upload',
   ANALYTICS: '/analytics',
+  ANALYTICS_DETAIL: '/analytics-detail',
   NOT_FOUND: '*',
 } as const;
 

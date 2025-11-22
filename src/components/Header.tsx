@@ -22,6 +22,7 @@ export const Header = ({ showNav = true, activePath }: HeaderProps) => {
     { label: 'Predict', href: ROUTES.PREDICT },
     { label: 'Upload', href: ROUTES.UPLOAD },
     { label: 'Analytics', href: ROUTES.ANALYTICS },
+    { label: 'Detailed Analytics', href: ROUTES.ANALYTICS_DETAIL },
   ];
 
   return (

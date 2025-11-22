@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Predict from "./pages/Predict";
 import Upload from "./pages/Upload";
 import Analytics from "./pages/Analytics";
+import AnalyticsDetail from "./pages/AnalyticsDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/predict" element={<Predict />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/analytics-detail" element={<AnalyticsDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
