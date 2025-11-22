@@ -3,14 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Upload as UploadIcon, Download, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Header } from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
 import { predictStudent, PredictionResult, StudentData } from "@/lib/prediction";
 import { parseCSVRow, validateStudentData } from "@/lib/validation";
 import { CSV_CONFIG, ROUTES } from "@/lib/constants";
 
+// Department branches
+const BRANCHES = [
+  { id: 'CSE', name: 'Computer Science Engineering' },
+  { id: 'ISE', name: 'Information Science Engineering' },
+  { id: 'MECH', name: 'Mechanical Engineering' },
+  { id: 'CV', name: 'Civil Engineering' },
+  { id: 'EC', name: 'Electronics & Communication' },
+  { id: 'EEE', name: 'Electrical & Electronics Engineering' },
+  { id: 'IM', name: 'Industrial Management' },
+  { id: 'AIML', name: 'Artificial Intelligence & Machine Learning' },
+  { id: 'CSBS', name: 'Computer Science Business Systems' },
+];
+
 interface PredictionWithStudent extends StudentData {
   studentId: number;
+  branch: string;
+  year: number;
   prediction: PredictionResult['prediction'];
   confidence: PredictionResult['confidence'];
   riskLevel: PredictionResult['riskLevel'];
@@ -19,6 +42,8 @@ interface PredictionWithStudent extends StudentData {
 }
 
 const Upload = () => {
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
   const [predictions, setPredictions] = useState<PredictionWithStudent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -31,6 +56,12 @@ const Upload = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate branch and year selection
+    if (!selectedBranch || !selectedYear) {
+      setUploadError("Please select both Department and Year before uploading");
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -91,6 +122,8 @@ const Upload = () => {
               const prediction = predictStudent(validationResult.data);
               results.push({
                 studentId: i,
+                branch: selectedBranch,
+                year: parseInt(selectedYear),
                 ...validationResult.data,
                 ...prediction,
               });
@@ -121,12 +154,12 @@ const Upload = () => {
           setFailedCount(failed);
           setProgress(100);
           setUploadSuccess(
-            `Successfully processed ${processed} students${failed > 0 ? ` (${failed} records had errors)` : ""}`
+            `Successfully processed ${processed} students from ${selectedBranch} - Year ${selectedYear}${failed > 0 ? ` (${failed} records had errors)` : ""}`
           );
 
           toast({
             title: "Upload Successful",
-            description: `Processed ${processed} students`,
+            description: `Processed ${processed} students from ${selectedBranch}`,
           });
         } catch (parseError) {
           setUploadError(
@@ -146,10 +179,10 @@ const Upload = () => {
 
   const downloadResults = () => {
     const csvContent = [
-      "Student ID,Attendance,Internal Marks,Cultural,Class Part.,Sports,Curricular,Prediction,Confidence,Risk Level",
+      "Student ID,Branch,Year,USN,Batch,Attendance,Internal Marks,Cultural,Class Part.,Sports,Curricular,Prediction,Confidence,Risk Level",
       ...predictions.map(
         (p) =>
-          `${p.studentId},${p.attendance},${p.internalMarks},${p.culturalActivity},${p.classParticipation},${p.sportsActivity},${p.curricularActivity},${p.prediction},${p.confidence}%,${p.riskLevel}`
+          `${p.studentId},${p.branch},${p.year},${p.usn},${p.batch},${p.attendance},${p.internalMarks},${p.culturalActivity},${p.classParticipation},${p.sportsActivity},${p.curricularActivity},${p.prediction},${p.confidence}%,${p.riskLevel}`
       ),
     ].join("\n");
 
@@ -157,7 +190,7 @@ const Upload = () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "predictions.csv";
+    a.download = `predictions-${selectedBranch}-year${selectedYear}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -203,6 +236,44 @@ const Upload = () => {
                   <AlertDescription className="text-green-700 text-xs sm:text-sm">{uploadSuccess}</AlertDescription>
                 </Alert>
               )}
+
+              {/* Department and Year Selection */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="space-y-2">
+                  <Label htmlFor="branch-select" className="text-xs sm:text-sm font-semibold">
+                    Department *
+                  </Label>
+                  <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+                    <SelectTrigger id="branch-select" className="text-xs sm:text-sm">
+                      <SelectValue placeholder="Select Department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BRANCHES.map((branch) => (
+                        <SelectItem key={branch.id} value={branch.id}>
+                          {branch.id} - {branch.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="year-select" className="text-xs sm:text-sm font-semibold">
+                    Year *
+                  </Label>
+                  <Select value={selectedYear} onValueChange={setSelectedYear}>
+                    <SelectTrigger id="year-select" className="text-xs sm:text-sm">
+                      <SelectValue placeholder="Select Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Year 1</SelectItem>
+                      <SelectItem value="2">Year 2</SelectItem>
+                      <SelectItem value="3">Year 3</SelectItem>
+                      <SelectItem value="4">Year 4</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
               {isLoading && (
                 <div className="space-y-2">
@@ -254,10 +325,12 @@ const Upload = () => {
             <Card>
               <CardHeader className="flex-col sm:flex-row">
                 <div className="flex-1">
-                  <CardTitle className="text-base sm:text-lg">Results ({predictions.length} students)</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">
+                    Results ({predictions.length} students)
+                  </CardTitle>
                   <CardDescription className="text-xs sm:text-sm">
-                    Prediction results for uploaded cohort
-                    {failedCount > 0 && ` (${failedCount} records failed validation)`}
+                    {selectedBranch} - Year {selectedYear}
+                    {failedCount > 0 && ` | ${failedCount} records failed validation`}
                   </CardDescription>
                 </div>
                 <Button onClick={downloadResults} className="mt-4 sm:mt-0 w-full sm:w-auto text-xs sm:text-sm">
@@ -271,18 +344,21 @@ const Upload = () => {
                     <thead className="border-b bg-gray-50">
                       <tr className="text-left">
                         <th className="pb-3 px-2 font-semibold">ID</th>
+                        <th className="pb-3 px-2 font-semibold">USN</th>
+                        <th className="pb-3 px-2 font-semibold">Batch</th>
                         <th className="pb-3 px-2 font-semibold">Attendance</th>
                         <th className="pb-3 px-2 font-semibold">Marks</th>
                         <th className="pb-3 px-2 font-semibold">Prediction</th>
                         <th className="pb-3 px-2 font-semibold">Confidence</th>
                         <th className="pb-3 px-2 font-semibold">Risk</th>
-                        <th className="pb-3 px-2 font-semibold">Engagement</th>
                       </tr>
                     </thead>
                     <tbody>
                       {predictions.map((p) => (
                         <tr key={p.studentId} className="border-b hover:bg-gray-50">
                           <td className="py-3 px-2">{p.studentId}</td>
+                          <td className="py-3 px-2 font-medium text-blue-600">{p.usn}</td>
+                          <td className="py-3 px-2 font-medium">{p.batch}</td>
                           <td className="py-3 px-2">{p.attendance.toFixed(1)}%</td>
                           <td className="py-3 px-2">{p.internalMarks.toFixed(1)}</td>
                           <td className="py-3 px-2">
@@ -310,7 +386,6 @@ const Upload = () => {
                               {p.riskLevel}
                             </span>
                           </td>
-                          <td className="py-3 px-2">{p.engagementIndex.toFixed(1)}</td>
                         </tr>
                       ))}
                     </tbody>
