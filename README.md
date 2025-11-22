@@ -57,14 +57,28 @@ pm run preview - Preview production build
 
 ## Project Structure
 
-`
+```
 src/
- pages/              # Main page components
- components/         # Reusable React components
- lib/                # Utility functions and prediction logic
- integrations/       # External service integrations (Supabase)
- hooks/              # Custom React hooks
-`
+├─ 🎨 FRONTEND          # User interface and components
+│  ├─ pages/             # Home, Predict, Upload, Analytics pages
+│  ├─ components/        # Reusable UI components
+│  └─ hooks/             # Custom React hooks
+│
+├─ ⚙️ BACKEND           # Business logic (prediction algorithm)
+│  ├─ prediction.ts      # ML prediction algorithm
+│  ├─ validation.ts      # Data validation schemas
+│  ├─ constants.ts       # Configuration and thresholds
+│  └─ README.md          # Backend documentation
+│
+├─ 🔌 INTEGRATIONS     # External services
+│  └─ supabase/          # Supabase database integration
+│
+└─ 📚 DOCUMENTATION
+   ├─ ARCHITECTURE.md    # Project structure guide
+   └─ README.md          # This file
+```
+
+**📖 For detailed architecture explanation, see [ARCHITECTURE.md](./ARCHITECTURE.md)**
 
 ## Deployment
 
