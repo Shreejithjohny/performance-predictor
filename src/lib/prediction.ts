@@ -1,6 +1,8 @@
 import { PREDICTION_WEIGHTS, RISK_THRESHOLDS, CONFIDENCE_CONFIG } from './constants';
 
 export interface StudentData {
+  usn: string;
+  batch: string;
   attendance: number;
   internalMarks: number;
   culturalActivity: number;
@@ -10,6 +12,8 @@ export interface StudentData {
 }
 
 export interface PredictionResult {
+  usn: string;
+  batch: string;
   prediction: 'Pass' | 'Fail';
   confidence: number;
   riskLevel: 'Low' | 'Medium' | 'High';
@@ -103,6 +107,8 @@ export const predictStudent = (data: StudentData): PredictionResult => {
   }
 
   return {
+    usn: data.usn,
+    batch: data.batch,
     prediction,
     confidence: Math.min(Math.max(confidence, 0), 100), // Clamp between 0-100
     riskLevel,

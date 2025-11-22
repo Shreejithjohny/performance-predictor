@@ -15,7 +15,12 @@ const PredictionResult = ({ result }: PredictionResultProps) => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Prediction Result</CardTitle>
+          <div>
+            <CardTitle>Prediction Result</CardTitle>
+            <CardDescription className="mt-1">
+              USN: {result.usn} | Batch: {result.batch}
+            </CardDescription>
+          </div>
           {isPassing ? (
             <CheckCircle2 className="h-8 w-8 text-success" />
           ) : (

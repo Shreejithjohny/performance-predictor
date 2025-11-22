@@ -27,6 +27,8 @@ const Predict = () => {
     resolver: zodResolver(studentDataSchema),
     mode: "onBlur",
     defaultValues: {
+      usn: "",
+      batch: "",
       attendance: 0,
       internalMarks: 0,
       culturalActivity: 0,
@@ -83,6 +85,48 @@ const Predict = () => {
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
+                {/* USN */}
+                <div className="space-y-2">
+                  <Label htmlFor="usn" className="text-xs sm:text-sm">USN (University Serial Number)</Label>
+                  <Controller
+                    name="usn"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="usn"
+                        type="text"
+                        placeholder="e.g., 1BG19CS001"
+                        {...field}
+                        className={`text-sm ${errors.usn ? "border-red-500" : ""}`}
+                      />
+                    )}
+                  />
+                  {errors.usn && (
+                    <p className="text-xs text-red-500">{errors.usn.message}</p>
+                  )}
+                </div>
+
+                {/* Batch */}
+                <div className="space-y-2">
+                  <Label htmlFor="batch" className="text-xs sm:text-sm">Batch/Section</Label>
+                  <Controller
+                    name="batch"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="batch"
+                        type="text"
+                        placeholder="e.g., 1A, 2B, 3-CSE"
+                        {...field}
+                        className={`text-sm ${errors.batch ? "border-red-500" : ""}`}
+                      />
+                    )}
+                  />
+                  {errors.batch && (
+                    <p className="text-xs text-red-500">{errors.batch.message}</p>
+                  )}
+                </div>
+
                 {/* Attendance */}
                 <div className="space-y-2">
                   <Label htmlFor="attendance" className="text-xs sm:text-sm">Attendance Percentage (0-100)</Label>
