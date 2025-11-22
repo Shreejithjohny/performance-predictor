@@ -1,0 +1,8 @@
+node_modules
+.git
+.gitignore
+README.md
+ARCHITECTURE.md
+QUICK_START.md
+.env.local
+.env.*.local
