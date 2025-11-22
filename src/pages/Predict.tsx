@@ -66,12 +66,12 @@ const Predict = () => {
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
       <Header activePath={ROUTES.PREDICT} />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <Card>
             <CardHeader>
-              <CardTitle>Student Data Input</CardTitle>
-              <CardDescription>Enter student information to predict academic performance</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Student Data Input</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Enter student information to predict academic performance</CardDescription>
             </CardHeader>
             <CardContent>
               {generalError && (
@@ -82,10 +82,10 @@ const Predict = () => {
                 </Alert>
               )}
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
                 {/* Attendance */}
                 <div className="space-y-2">
-                  <Label htmlFor="attendance">Attendance Percentage (0-100)</Label>
+                  <Label htmlFor="attendance" className="text-xs sm:text-sm">Attendance Percentage (0-100)</Label>
                   <Controller
                     name="attendance"
                     control={control}
@@ -96,21 +96,22 @@ const Predict = () => {
                         min="0"
                         max="100"
                         step="0.1"
+                        placeholder="0-100"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.attendance ? "border-red-500" : ""}
+                        className={`text-sm ${errors.attendance ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.attendance && (
-                    <p className="text-sm text-red-500">{errors.attendance.message}</p>
+                    <p className="text-xs text-red-500">{errors.attendance.message}</p>
                   )}
                 </div>
 
                 {/* Internal Marks */}
                 <div className="space-y-2">
-                  <Label htmlFor="internalMarks">Internal Marks Average (0-100)</Label>
+                  <Label htmlFor="internalMarks" className="text-xs sm:text-sm">Internal Marks Average (0-100)</Label>
                   <Controller
                     name="internalMarks"
                     control={control}
@@ -121,21 +122,22 @@ const Predict = () => {
                         min="0"
                         max="100"
                         step="0.1"
+                        placeholder="0-100"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.internalMarks ? "border-red-500" : ""}
+                        className={`text-sm ${errors.internalMarks ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.internalMarks && (
-                    <p className="text-sm text-red-500">{errors.internalMarks.message}</p>
+                    <p className="text-xs text-red-500">{errors.internalMarks.message}</p>
                   )}
                 </div>
 
                 {/* Class Participation */}
                 <div className="space-y-2">
-                  <Label htmlFor="classParticipation">Class Participation Score (0-10)</Label>
+                  <Label htmlFor="classParticipation" className="text-xs sm:text-sm">Class Participation Score (0-10)</Label>
                   <Controller
                     name="classParticipation"
                     control={control}
@@ -146,21 +148,22 @@ const Predict = () => {
                         min="0"
                         max="10"
                         step="0.1"
+                        placeholder="0-10"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.classParticipation ? "border-red-500" : ""}
+                        className={`text-sm ${errors.classParticipation ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.classParticipation && (
-                    <p className="text-sm text-red-500">{errors.classParticipation.message}</p>
+                    <p className="text-xs text-red-500">{errors.classParticipation.message}</p>
                   )}
                 </div>
 
                 {/* Cultural Activity */}
                 <div className="space-y-2">
-                  <Label htmlFor="culturalActivity">Cultural Activity Score (0-10)</Label>
+                  <Label htmlFor="culturalActivity" className="text-xs sm:text-sm">Cultural Activity Score (0-10)</Label>
                   <Controller
                     name="culturalActivity"
                     control={control}
@@ -171,21 +174,22 @@ const Predict = () => {
                         min="0"
                         max="10"
                         step="0.1"
+                        placeholder="0-10"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.culturalActivity ? "border-red-500" : ""}
+                        className={`text-sm ${errors.culturalActivity ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.culturalActivity && (
-                    <p className="text-sm text-red-500">{errors.culturalActivity.message}</p>
+                    <p className="text-xs text-red-500">{errors.culturalActivity.message}</p>
                   )}
                 </div>
 
                 {/* Sports Activity */}
                 <div className="space-y-2">
-                  <Label htmlFor="sportsActivity">Sports Activity Score (0-10)</Label>
+                  <Label htmlFor="sportsActivity" className="text-xs sm:text-sm">Sports Activity Score (0-10)</Label>
                   <Controller
                     name="sportsActivity"
                     control={control}
@@ -196,21 +200,22 @@ const Predict = () => {
                         min="0"
                         max="10"
                         step="0.1"
+                        placeholder="0-10"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.sportsActivity ? "border-red-500" : ""}
+                        className={`text-sm ${errors.sportsActivity ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.sportsActivity && (
-                    <p className="text-sm text-red-500">{errors.sportsActivity.message}</p>
+                    <p className="text-xs text-red-500">{errors.sportsActivity.message}</p>
                   )}
                 </div>
 
                 {/* Curricular Activity */}
                 <div className="space-y-2">
-                  <Label htmlFor="curricularActivity">Curricular Activity Score (0-10)</Label>
+                  <Label htmlFor="curricularActivity" className="text-xs sm:text-sm">Curricular Activity Score (0-10)</Label>
                   <Controller
                     name="curricularActivity"
                     control={control}
@@ -221,20 +226,21 @@ const Predict = () => {
                         min="0"
                         max="10"
                         step="0.1"
+                        placeholder="0-10"
                         {...field}
                         value={field.value || ""}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        className={errors.curricularActivity ? "border-red-500" : ""}
+                        className={`text-sm ${errors.curricularActivity ? "border-red-500" : ""}`}
                       />
                     )}
                   />
                   {errors.curricularActivity && (
-                    <p className="text-sm text-red-500">{errors.curricularActivity.message}</p>
+                    <p className="text-xs text-red-500">{errors.curricularActivity.message}</p>
                   )}
                 </div>
 
-                <div className="flex gap-2 pt-4">
-                  <Button type="submit" className="flex-1" disabled={isLoading}>
+                <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                  <Button type="submit" className="flex-1 text-sm sm:text-base" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -245,7 +251,7 @@ const Predict = () => {
                     )}
                   </Button>
                   {result && (
-                    <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+                    <Button variant="outline" onClick={handleReset} disabled={isLoading} className="text-sm sm:text-base">
                       Clear
                     </Button>
                   )}

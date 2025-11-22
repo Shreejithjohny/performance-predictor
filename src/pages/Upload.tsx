@@ -178,12 +178,12 @@ const Upload = () => {
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
       <Header activePath={ROUTES.UPLOAD} />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Bulk Upload</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-base sm:text-lg">Bulk Upload</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
                 Upload a CSV file with student data for batch predictions
               </CardDescription>
             </CardHeader>
@@ -191,23 +191,23 @@ const Upload = () => {
               {uploadError && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{uploadError}</AlertDescription>
+                  <AlertTitle className="text-sm sm:text-base">Error</AlertTitle>
+                  <AlertDescription className="text-xs sm:text-sm">{uploadError}</AlertDescription>
                 </Alert>
               )}
 
               {uploadSuccess && (
                 <Alert className="border-green-200 bg-green-50">
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-800">Success</AlertTitle>
-                  <AlertDescription className="text-green-700">{uploadSuccess}</AlertDescription>
+                  <AlertTitle className="text-green-800 text-sm sm:text-base">Success</AlertTitle>
+                  <AlertDescription className="text-green-700 text-xs sm:text-sm">{uploadSuccess}</AlertDescription>
                 </Alert>
               )}
 
               {isLoading && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />
                     <span>Processing file... {progress}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -219,13 +219,13 @@ const Upload = () => {
                 </div>
               )}
 
-              <div className="flex gap-4 flex-wrap">
-                <Button variant="outline" onClick={downloadTemplate} disabled={isLoading}>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap">
+                <Button variant="outline" onClick={downloadTemplate} disabled={isLoading} className="w-full sm:w-auto text-xs sm:text-sm">
                   <Download className="mr-2 h-4 w-4" />
                   Download Template
                 </Button>
-                <label htmlFor="file-upload">
-                  <Button asChild disabled={isLoading}>
+                <label htmlFor="file-upload" className="w-full sm:w-auto">
+                  <Button asChild disabled={isLoading} className="w-full text-xs sm:text-sm">
                     <span>
                       <UploadIcon className="mr-2 h-4 w-4" />
                       {isLoading ? "Uploading..." : "Upload CSV"}
@@ -242,7 +242,7 @@ const Upload = () => {
                 />
               </div>
 
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-xs sm:text-sm text-gray-600 space-y-1">
                 <p>• Maximum file size: {CSV_CONFIG.maxFileSize / (1024 * 1024)}MB</p>
                 <p>• Maximum records: {CSV_CONFIG.maxRecords}</p>
                 <p>• Accepted format: CSV with headers in first row</p>
@@ -252,24 +252,22 @@ const Upload = () => {
 
           {predictions.length > 0 && (
             <Card>
-              <CardHeader>
-                <div className="flex justify-between items-center flex-wrap gap-4">
-                  <div>
-                    <CardTitle>Results ({predictions.length} students)</CardTitle>
-                    <CardDescription>
-                      Prediction results for uploaded cohort
-                      {failedCount > 0 && ` (${failedCount} records failed validation)`}
-                    </CardDescription>
-                  </div>
-                  <Button onClick={downloadResults}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Results
-                  </Button>
+              <CardHeader className="flex-col sm:flex-row">
+                <div className="flex-1">
+                  <CardTitle className="text-base sm:text-lg">Results ({predictions.length} students)</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    Prediction results for uploaded cohort
+                    {failedCount > 0 && ` (${failedCount} records failed validation)`}
+                  </CardDescription>
                 </div>
+                <Button onClick={downloadResults} className="mt-4 sm:mt-0 w-full sm:w-auto text-xs sm:text-sm">
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Results
+                </Button>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                <div className="overflow-x-auto -mx-6 px-6">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead className="border-b bg-gray-50">
                       <tr className="text-left">
                         <th className="pb-3 px-2 font-semibold">ID</th>
@@ -320,20 +318,20 @@ const Upload = () => {
                 </div>
 
                 <div className="mt-6 pt-4 border-t">
-                  <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm">
                     <div>
                       <p className="text-gray-600">Total Students</p>
-                      <p className="text-2xl font-bold">{predictions.length}</p>
+                      <p className="text-xl sm:text-2xl font-bold">{predictions.length}</p>
                     </div>
                     <div>
                       <p className="text-gray-600">Pass Rate</p>
-                      <p className="text-2xl font-bold">
+                      <p className="text-xl sm:text-2xl font-bold">
                         {Math.round((predictions.filter((p) => p.prediction === "Pass").length / predictions.length) * 100)}%
                       </p>
                     </div>
                     <div>
                       <p className="text-gray-600">Avg Confidence</p>
-                      <p className="text-2xl font-bold">
+                      <p className="text-xl sm:text-2xl font-bold">
                         {Math.round(predictions.reduce((a, p) => a + p.confidence, 0) / predictions.length)}%
                       </p>
                     </div>

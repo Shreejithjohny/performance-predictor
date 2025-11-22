@@ -24,17 +24,17 @@ const Analytics = () => {
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
       <Header activePath={ROUTES.ANALYTICS} />
 
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold mb-6 text-foreground">Analytics Dashboard</h2>
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-foreground">Analytics Dashboard</h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Student Distribution</CardTitle>
-              <CardDescription>Performance categorization across cohort</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Student Distribution</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Performance categorization across cohort</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+            <CardContent className="h-[250px] sm:h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={performanceData}
@@ -42,7 +42,7 @@ const Analytics = () => {
                     cy="50%"
                     labelLine={false}
                     label={({ name, value }) => `${name}: ${value}`}
-                    outerRadius={100}
+                    outerRadius={80}
                     dataKey="value"
                   >
                     {performanceData.map((entry, index) => (
@@ -57,14 +57,14 @@ const Analytics = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Feature Importance</CardTitle>
-              <CardDescription>Factors influencing predictions</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Feature Importance</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Factors influencing predictions</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+            <CardContent className="h-[250px] sm:h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={featureImportance}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="feature" angle={-45} textAnchor="end" height={100} />
+                  <XAxis dataKey="feature" angle={-45} textAnchor="end" height={80} tick={{ fontSize: 12 }} />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="importance" fill="hsl(var(--primary))" />
@@ -75,31 +75,31 @@ const Analytics = () => {
 
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Key Insights</CardTitle>
-              <CardDescription>Model performance and recommendations</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Key Insights</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Model performance and recommendations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg">
-                  <div className="text-sm text-muted-foreground">Model Accuracy</div>
-                  <div className="text-2xl font-bold text-success">94.2%</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="p-3 sm:p-4 border rounded-lg">
+                  <div className="text-xs sm:text-sm text-muted-foreground">Model Accuracy</div>
+                  <div className="text-xl sm:text-2xl font-bold text-success">94.2%</div>
                   <div className="text-xs text-muted-foreground mt-1">Validated on test set</div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="text-sm text-muted-foreground">Early Detection Rate</div>
-                  <div className="text-2xl font-bold text-primary">87.5%</div>
+                <div className="p-3 sm:p-4 border rounded-lg">
+                  <div className="text-xs sm:text-sm text-muted-foreground">Early Detection Rate</div>
+                  <div className="text-xl sm:text-2xl font-bold text-primary">87.5%</div>
                   <div className="text-xs text-muted-foreground mt-1">At-risk students identified</div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="text-sm text-muted-foreground">Intervention Success</div>
-                  <div className="text-2xl font-bold text-secondary">76.3%</div>
+                <div className="p-3 sm:p-4 border rounded-lg">
+                  <div className="text-xs sm:text-sm text-muted-foreground">Intervention Success</div>
+                  <div className="text-xl sm:text-2xl font-bold text-secondary">76.3%</div>
                   <div className="text-xs text-muted-foreground mt-1">Improved after support</div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">Top Recommendations</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                <h4 className="font-semibold text-sm sm:text-base text-foreground">Top Recommendations</h4>
+                <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-muted-foreground">
                   <li>Focus on attendance improvement programs - highest impact factor (35%)</li>
                   <li>Implement early warning systems for students below 75% attendance</li>
                   <li>Strengthen class participation through interactive sessions</li>
